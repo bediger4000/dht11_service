@@ -55,16 +55,18 @@ int pi_2_mmio_init(void) {
     if (fread(buf, 1, sizeof(buf), fp) != sizeof(buf)) {
       return MMIO_ERROR_OFFSET;
     }
+/*
     fprintf(stderr, "%02x%02x%02x%02x\n", 
 	buf[0],
 	buf[1],
 	buf[2],
 	buf[3]
     );
+*/
     uint32_t peri_base = buf[0] << 24 | buf[1] << 16 | buf[2] << 8 | buf[3] << 0;
-    fprintf(stderr, "peri_base 0x%x\n", peri_base);
+    /* fprintf(stderr, "peri_base 0x%x\n", peri_base); */
     uint32_t gpio_base = peri_base + GPIO_BASE_OFFSET;
-    fprintf(stderr, "gpio_base 0x%x\n", gpio_base);
+    /* fprintf(stderr, "gpio_base 0x%x\n", gpio_base); */
     fclose(fp);
 
     char *gpiomemory = "/dev/gpiomem";
