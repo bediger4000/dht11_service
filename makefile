@@ -1,6 +1,7 @@
 CFLAGS=-Wall -Wextra -g
 
-OBJFILES = work.o timestamp.o pi_2_mmio.o pi_2_dht_read.o
+OBJFILES = work.o timestamp.o pi_2_mmio.o pi_2_dht_read.o \
+	common_dht_read.o
 
 all: $(OBJFILES)
 
@@ -15,6 +16,9 @@ pi_2_mmio.o: pi_2_mmio.c pi_2_mmio.h
 
 pi_2_dht_read.o: pi_2_dht_read.c pi_2_dht_read.h pi_2_mmio.h
 	$(CC) $(CFLAGS) -c pi_2_dht_read.c
+
+common_dht_read.o: common_dht_read.c common_dht_read.h
+	$(CC) $(CFLAGS) -c common_dht_read.c 
 
 clean:
 	-rm -rf $(OBJFILES)
