@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <unistd.h>
+#include <netinet/in.h> /* in_addr_t */
+
 #include "common_dht_read.h"
 #include "pi_2_dht_read.h"
 #include "dht_service.h"

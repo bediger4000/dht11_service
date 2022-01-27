@@ -4,6 +4,7 @@
 #include <dirent.h>
 #include <errno.h>
 #include <string.h>
+#include <netinet/in.h> /* in_addr_t */
 #include "dht_service.h"
 
 char *thermometer_filename(void);

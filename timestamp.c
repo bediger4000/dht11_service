@@ -1,4 +1,5 @@
 #include <time.h> /* strftime */
+#include <netinet/in.h> /* in_addr_t */
 #include "dht_service.h"
 
 char buffer[128];
