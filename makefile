@@ -1,7 +1,7 @@
 CFLAGS=-Wall -Wextra -g
 
 OBJFILES = work.o timestamp.o pi_2_mmio.o pi_2_dht_read.o \
-	common_dht_read.o temp2.o address.o
+	common_dht_read.o temp2.o address.o collector.o
 
 all: dht_service
 
@@ -16,6 +16,9 @@ checkt: checkt.c timestamp.o temp2.o dht_service.h
 
 main.o: main.c dht_service.h
 	$(CC) $(CFLAGS) -c main.c
+
+collector.o: collector.c dht_service.h
+	$(CC) $(CFLAGS) -c collector.c
 
 work.o: work.c dht_service.h common_dht_read.h pi_2_dht_read.h
 	$(CC) $(CFLAGS) -c work.c
