@@ -6,6 +6,8 @@
 
 #include "dht_service.h"
 
+void usage(char *progname);
+
 int
 main(int argc, char **argv)
 {
@@ -60,4 +62,16 @@ main(int argc, char **argv)
 		
 
 	return 0;
+}
+
+void
+usage(char *progname)
+{
+	fprintf(stderr, "%s: temperature and humidity collector\n", progname);
+	fprintf(stderr, "Usage: %s <-i interval> <-p server port> <-s server>\n", progname);
+	fprintf(stderr, "Flags:\n"
+		"\t-i interval between reports in seconds\n"
+		"\t-p server's UDP port\n"
+		"\t-s server's name or IP address\n"
+	);
 }
