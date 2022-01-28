@@ -6,7 +6,7 @@ OBJFILES = work.o timestamp.o pi_2_mmio.o pi_2_dht_read.o \
 all: dht_service
 
 dht_service: main.o $(OBJFILES)
-	$(CC) $(CFLAGS) -o dht_server main.o $(OBJFILES)
+	$(CC) $(CFLAGS) -o dht_service main.o $(OBJFILES)
 
 check: check.c $(OBJFILES)
 	$(CC) $(CFLAGS) -o check check.c $(OBJFILES)
