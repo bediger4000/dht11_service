@@ -59,7 +59,8 @@ main(int argc, char **argv)
 		ntohs(port),
 		interval
 	);
-		
+
+	collect_data(server, port, interval);
 
 	return 0;
 }
