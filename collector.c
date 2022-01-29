@@ -30,6 +30,8 @@ collect_data(in_addr_t server, uint16_t network_endian_port, int report_interval
 
 		char *message = format_data();
 
+		logmsg("sending %d bytes", strlen(message));
+
 		n = sendto(
 			skt,
 			message, strlen(message),
@@ -37,20 +39,17 @@ collect_data(in_addr_t server, uint16_t network_endian_port, int report_interval
 			(const struct sockaddr *)&servaddr, sizeof(servaddr)
 		);
 		if (0 > n) {
-			fprintf(stderr, "%s sendto problem: %s\n",
-				timestamp(), strerror(errno));
+			logmsg("sendto problem: %s\n", strerror(errno));
 			++consecutive_errors;
 		} else if (n != (ssize_t)strlen(message)) {
-			fprintf(stderr, "%s sent %d bytes, wanted to send %d\n",
-				timestamp(), n, strlen(message));
+			logmsg("sent %d bytes, wanted to send %d\n", n, strlen(message));
 			++consecutive_errors;
 		} else {
 			consecutive_errors = 0;
 		}
 
 		if (consecutive_errors > 4) {
-			fprintf(stderr, "%s leaving collection loop on too many errors\n",
-				timestamp());
+			logmsg("leaving collection loop on too many errors");
 			break;
 		}
 
@@ -62,10 +61,7 @@ int
 initialize_socket(in_addr_t server, uint16_t network_endian_port)
 {
 	if (0 > (skt = socket(AF_INET, SOCK_DGRAM, 0))) {
-		fprintf(stderr, "%s problem creating UDP socket: %s\n",
-			timestamp(),
-			strerror(errno)
-		);
+		logmsg("problem creating UDP socket: %s", strerror(errno));
 		return -1;
 	}
 
@@ -84,12 +80,12 @@ char message_buffer[256];
 char *
 format_data(void)
 {
-        float humidity = 0.0, temperature = 0.0, temp2 = 0.0;
-        int pin = 17;
+	float humidity = 0.0, temperature = 0.0, temp2 = 0.0;
+	int pin = 17;
 
-        read_dht11(pin, &temperature, &humidity);
+	read_dht11(pin, &temperature, &humidity);
 
-        ds18b20_temp(&temp2);
+	ds18b20_temp(&temp2);
 
 	message_buffer[0] = '\0';
 

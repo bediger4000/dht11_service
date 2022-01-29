@@ -45,9 +45,9 @@ main(int argc, char **argv)
 	server = find_address(server_address);
 
 	if (interval < 0 || server == 0 || port == 0) {
-		fprintf(stderr, "Interval of %d secs or\n", interval);
-		fprintf(stderr, "UDP port of %d secs or\n", ntohs(port));
-		fprintf(stderr, "host of %s is wrong\n", server_address);
+		logmsg("Interval of %d secs or\n", interval);
+		logmsg("UDP port of %d secs or\n", ntohs(port));
+		logmsg("host of %s is wrong\n", server_address);
 		return -1;
 	}
 

@@ -17,8 +17,7 @@ find_address(char *server)
 		struct hostent *hent;
 
 		if (NULL == (hent = gethostbyname(server))) {
-			fprintf(stderr, "%s %s: %s\n", timestamp(), server,
-				hstrerror(h_errno));
+			logmsg("%s: %s", server, hstrerror(h_errno));
 			return 0;
 		}
 

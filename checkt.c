@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <netinet/in.h> /* in_addr_t */
+
 #include "dht_service.h"
 
 int

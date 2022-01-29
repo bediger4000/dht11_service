@@ -28,8 +28,10 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <errno.h>
+#include <netinet/in.h>
 
 #include "pi_2_mmio.h"
+#include "dht_service.h"
 
 #define GPIO_BASE_OFFSET 0x200000
 /* #define GPIO_BASE_OFFSET 0x3f200000 */
@@ -49,24 +51,14 @@ int pi_2_mmio_init(void) {
       return MMIO_ERROR_OFFSET;
     }
     if (0 > fseek(fp, 4, SEEK_SET)) {
-	fprintf(stderr, "fseek /proc/device-tree/soc/ranges: %s\n", strerror(errno));
+         logmsg("fseek /proc/device-tree/soc/ranges: %s\n", strerror(errno));
     }
     unsigned char buf[4];
     if (fread(buf, 1, sizeof(buf), fp) != sizeof(buf)) {
       return MMIO_ERROR_OFFSET;
     }
-/*
-    fprintf(stderr, "%02x%02x%02x%02x\n", 
-	buf[0],
-	buf[1],
-	buf[2],
-	buf[3]
-    );
-*/
     uint32_t peri_base = buf[0] << 24 | buf[1] << 16 | buf[2] << 8 | buf[3] << 0;
-    /* fprintf(stderr, "peri_base 0x%x\n", peri_base); */
     uint32_t gpio_base = peri_base + GPIO_BASE_OFFSET;
-    /* fprintf(stderr, "gpio_base 0x%x\n", gpio_base); */
     fclose(fp);
 
     char *gpiomemory = "/dev/gpiomem";
@@ -74,7 +66,7 @@ int pi_2_mmio_init(void) {
     /* int fd = open("/dev/mem", O_RDWR | O_SYNC); */
     if (fd == -1) {
       // Error opening /dev/gpiomem.
-      fprintf(stderr, "problem opening %s: %s\n", gpiomemory, strerror(errno));
+      logmsg("problem opening %s: %s", gpiomemory, strerror(errno));
       return MMIO_ERROR_DEVMEM;
     }
     // Map GPIO memory to location in process space.
@@ -87,7 +79,7 @@ int pi_2_mmio_init(void) {
 	gpio_base
     );
     if (pi_2_mmio_gpio == MAP_FAILED) {
-      fprintf(stderr, "mmap of fd %d failed: %s\n", fd, strerror(errno));
+      logmsg("mmap of fd %d failed: %s", fd, strerror(errno));
       // Don't save the result if the memory mapping failed.
       pi_2_mmio_gpio = NULL;
       close(fd);

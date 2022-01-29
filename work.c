@@ -23,19 +23,19 @@ read_dht11(int pin, float *temperature, float *humidity)
 		if (result != 0) {
 			switch (result) {
 			case DHT_ERROR_TIMEOUT:
-				fprintf(stderr, "%s DHT read timeout\n", timestamp());
+				logmsg("DHT read timeout");
 				break;
 			case DHT_ERROR_CHECKSUM:
-				fprintf(stderr, "%s DHT read checksum error\n", timestamp());
+				logmsg("DHT read checksum error");
 				break;
 			case DHT_ERROR_ARGUMENT:
-				fprintf(stderr, "%s DHT argument problem\n", timestamp());
+				logmsg("DHT argument problem");
 				break;
 			case DHT_ERROR_GPIO :
-				fprintf(stderr, "%s GPIO error\n", timestamp());
+				logmsg("GPIO error");
 				break;
 			default:
-				fprintf(stderr, "%s Unknown error 0x%x\n", timestamp(), result);
+				logmsg("Unknown error 0x%x", result);
 			}
 			sleep(1);
 			continue;

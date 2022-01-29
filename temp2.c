@@ -24,13 +24,14 @@ ds18b20_temp(float *temperature)
 	*temperature = 0.0;
 
 	if (NULL == (filename = thermometer_filename())) {
-		fprintf(stderr, "%s couldn't find termometer file name\n", timestamp());
+		logmsg("couldn't find termometer file name");
 		return -1;
 	}
 
+	logmsg("thermometer %s", filename);
+
 	if (NULL == (fin = fopen(filename, "r"))) {
-		fprintf(stderr, "%s problem opening termometer file \"%s\": %s\n",
-			timestamp(),
+		logmsg("problem opening termometer file \"%s\": %s",
 			filename,
 			strerror(errno)
 		);
@@ -38,8 +39,7 @@ ds18b20_temp(float *temperature)
 	}
 
 	if (0 == (bufsz = fread(&buffer[0], 1, sizeof(buffer), fin))) {
-		fprintf(stderr, "%s problem reading termometer file \"%s\": %s\n",
-			timestamp(),
+		logmsg("problem reading termometer file \"%s\": %s",
 			filename,
 			strerror(errno)
 		);
@@ -62,18 +62,24 @@ parse_buffer(char *buffer, size_t bufsz, float *temperature)
 		if (buffer[i] == '\n') {
 			int itemp;
 			int linelen = (int)(&buffer[i] - line);
+			char *tat, *eqat;
 
 			if (linelen < 7) {
 				line = &buffer[i+1];
 				continue;
 			}
 
-			if (strncmp("t=", &buffer[i-7], 2) != 0) {
+			if (NULL == (tat = index(line, 't'))) {
 				line = &buffer[i+1];
 				continue;
 			}
+			if (NULL == (eqat = index(tat, '='))) {
+				line = &buffer[i+1];
+				continue;
+			}
+
 			buffer[i] = '\0';
-			itemp = atoi(&buffer[i-5]);
+			itemp = atoi(eqat+1);
 			*temperature = (float)itemp/1000.0;
 			return 0;
 		}
@@ -94,7 +100,7 @@ thermometer_filename(void)
 
 	dir = opendir(DEVDIR);
 	if (!dir) {
-		fprintf(stderr, "Problem opening %s: %s\n", DEVDIR, strerror(errno));
+		logmsg("problem opening %s: %s\n", DEVDIR, strerror(errno));
 		return NULL;
 	}
 
