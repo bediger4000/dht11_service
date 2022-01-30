@@ -45,5 +45,5 @@ common_dht_read.o: common_dht_read.c common_dht_read.h
 	$(CC) $(CFLAGS) -c common_dht_read.c 
 
 clean:
-	-rm -rf $(OBJFILES)
+	-rm -rf $(OBJFILES) main.o
 	-rm -rf check checkt dht_service
