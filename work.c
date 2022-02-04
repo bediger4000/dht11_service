@@ -41,7 +41,7 @@ read_dht11(int pin, float *temperature, float *humidity)
 			continue;
 		}
 		++good_reads;
-		sleep(1);
+		sleep(1); /* 1 Hz sampling rate */
 	}
 
 	if (loop_count >= 10) {
