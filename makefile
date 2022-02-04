@@ -11,8 +11,8 @@ dht_service: main.o $(OBJFILES)
 check: check.c $(OBJFILES)
 	$(CC) $(CFLAGS) -o check check.c $(OBJFILES)
 
-checkt: checkt.c timestamp.o temp2.o dht_service.h
-	$(CC) $(CFLAGS) -o checkt checkt.c timestamp.o temp2.o
+checkt: checkt.c timestamp.o temp2.o dht_service.h logging.o
+	$(CC) $(CFLAGS) -o checkt checkt.c timestamp.o temp2.o logging.o
 
 main.o: main.c dht_service.h
 	$(CC) $(CFLAGS) -c main.c
