@@ -18,34 +18,43 @@ ssize_t n;
 socklen_t slen;
 
 void
-collect_data(in_addr_t server, uint16_t network_endian_port, int report_interval)
+collect_data(
+	in_addr_t server,
+	uint16_t network_endian_port,
+	int report_interval,
+	int debug
+)
 {
 	int consecutive_errors = 0;
 
-	if (0 > initialize_socket(server, network_endian_port)) {
-		return;
+	if (!debug) {
+		if (0 > initialize_socket(server, network_endian_port)) {
+			return;
+		}
 	}
 
 	while (1) {
-
 		char *message = format_data();
 
-		logmsg("sending %d bytes", strlen(message));
-
-		n = sendto(
-			skt,
-			message, strlen(message),
-			MSG_CONFIRM|MSG_DONTWAIT,
-			(const struct sockaddr *)&servaddr, sizeof(servaddr)
-		);
-		if (0 > n) {
-			logmsg("sendto problem: %s\n", strerror(errno));
-			++consecutive_errors;
-		} else if (n != (ssize_t)strlen(message)) {
-			logmsg("sent %d bytes, wanted to send %d\n", n, strlen(message));
-			++consecutive_errors;
+		if (!debug) {
+			logmsg("sending %d bytes", strlen(message));
+			int n = sendto(
+				skt,
+				message, strlen(message),
+				MSG_CONFIRM|MSG_DONTWAIT,
+				(const struct sockaddr *)&servaddr, sizeof(servaddr)
+			);
+			if (0 > n) {
+				logmsg("sendto problem: %s\n", strerror(errno));
+				++consecutive_errors;
+			} else if (n != (ssize_t)strlen(message)) {
+				logmsg("sent %d bytes, wanted to send %d\n", n, strlen(message));
+				++consecutive_errors;
+			} else {
+				consecutive_errors = 0;
+			}
 		} else {
-			consecutive_errors = 0;
+			logmsg(message);
 		}
 
 		if (consecutive_errors > 4) {

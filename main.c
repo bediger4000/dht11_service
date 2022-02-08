@@ -18,10 +18,14 @@ main(int argc, char **argv)
 	in_addr_t server;
 	uint16_t port;
 	int interval;
+	int debug = 0;
 
 	int opt;
-	while (0 < (opt = getopt(argc, argv, "i:p:s:x"))) {
+	while (0 < (opt = getopt(argc, argv, "di:p:s:x"))) {
 		switch (opt) {
+		case 'd':
+			debug = 1;
+			break;
 		case 'i':
 			intervalstring = optarg;
 			break;
@@ -60,7 +64,7 @@ main(int argc, char **argv)
 		interval
 	);
 
-	collect_data(server, port, interval);
+	collect_data(server, port, interval, debug);
 
 	return 0;
 }
